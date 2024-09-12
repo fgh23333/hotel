@@ -3,7 +3,6 @@ import loginView from "@/views/loginView.vue";
 import userManage from "@/views/userManage.vue"
 import orderManage from "@/views/orderManage.vue"
 import { createRouter, createWebHashHistory } from "vue-router";
-import { useAuthStore } from '../store/index.js';
 import staffManage from "@/views/staffManage.vue";
 
 const router = createRouter({
@@ -44,8 +43,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    const authStore = useAuthStore();
-    const token = localStorage.getItem(token)
+    const token = localStorage.getItem('token')
     console.log(token);
     
     if (to.meta.requiresAuth) {
