@@ -17,7 +17,6 @@
                 <el-menu-item index="userManage">用户管理</el-menu-item>
                 <el-menu-item index="staffManage">员工管理</el-menu-item>
                 <el-menu-item index="orderManage">回收订单管理</el-menu-item>
-                <el-menu-item index="withdrawManage">提现管理</el-menu-item>
             </el-sub-menu>
         </el-menu>
     </div>

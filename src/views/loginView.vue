@@ -30,7 +30,6 @@
 </template>
 
 <script>
-import { useAuthStore } from '@/store/index'; // 引入 Pinia store
 import { ElMessage } from 'element-plus';
 
 export default {
@@ -61,7 +60,7 @@ export default {
         }
     },
     created() {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('login');
         if (token) {
             this.$router.push('/')
             ElMessage({
@@ -70,6 +69,7 @@ export default {
             })
         } else {
             localStorage.setItem('login', 'false')
+            this.$router.push('/login')
             ElMessage({
                 message: '登录失败',
                 type: 'error'
@@ -82,7 +82,7 @@ export default {
 <style lang="scss">
 #loginView {
     height: 100vh;
-    background-image: linear-gradient(to bottom right, rgb(180, 245, 106), #ffffff);
+    background-image: linear-gradient(to bottom right, rgb(130, 23, 237), #c4afc1);
     overflow: hidden;
 
     .formWrapper {

@@ -70,7 +70,6 @@
 
 <script>
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { useAuthStore } from '@/store/index';
 
 export default {
     data() {
