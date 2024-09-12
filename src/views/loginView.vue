@@ -62,6 +62,19 @@ export default {
     },
     created() {
         const token = localStorage.getItem('token');
+        if (token) {
+            this.$router.push('/')
+            ElMessage({
+                message: '登录成功',
+                type: 'success'
+            })
+        } else {
+            localStorage.setItem('login', 'false')
+            ElMessage({
+                message: '登录失败',
+                type: 'error'
+            })
+        }
     }
 };
 </script>

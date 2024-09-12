@@ -69,7 +69,6 @@
 </template>
 
 <script>
-import { server, port } from '@/utils/config.js'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useAuthStore } from '@/store/index';
 
@@ -103,22 +102,7 @@ export default {
     },
     methods: {
         getTableData() {
-            axiosInstance({
-                method: 'GET',
-                url: `http://${server}:${port}/api/order`
-            }).then(async res => {
-                if (res.data.msg == 'success') {
-                    for (let i = 0; i < res.data.data.length; i++) {
-                        res.data.data[i].order_time = res.data.data[i].order_time.replace('T', ' ').replace('.000Z', '');
-                    }
-                    this.tableData = res.data.data
-                } else {
-                    ElMessage({
-                        message: '信息获取失败',
-                        type: 'error'
-                    })
-                }
-            })
+            
         },
         handleInfo(index, row) {
             this.dialogFormVisible = true
@@ -158,16 +142,7 @@ export default {
                     user_id: row.user_id,
                     secret: row.secret
                 }
-                axiosInstance({
-                    method: 'POST',
-                    headers: useAuthStore().headers,
-                    url: `http://${server}:${port}/api/order/cancel`,
-                    data: postData
-                }).then(res => {
-                    ElMessage({
-                        msg: res.data.msg
-                    })
-                })
+                
             }).catch(() => {
                 ElMessage({
                     type: 'info',
@@ -175,27 +150,6 @@ export default {
                 })
             })
         },
-        convertTimestampsToDateTimeRange(intervalStr) {
-            const [startTimestamp, endTimestamp] = intervalStr.split('-').map(Number);
-
-            const startTime = new Date(startTimestamp);
-            const endTime = new Date(endTimestamp);
-
-            const formatDate = (date) => {
-                const year = date.getUTCFullYear();
-                const month = String(date.getUTCMonth() + 1).padStart(2, '0');
-                const day = String(date.getUTCDate()).padStart(2, '0');
-                return `${year}-${month}-${day}`;
-            };
-
-            const formatTime = (date) => {
-                const hours = String(date.getUTCHours()).padStart(2, '0');
-                const minutes = String(date.getUTCMinutes()).padStart(2, '0');
-                return `${hours}:${minutes}`;
-            };
-
-            return `${formatDate(startTime)} ${formatTime(startTime)} - ${formatTime(endTime)}`;
-        }
     },
     created() {
         this.getTableData()

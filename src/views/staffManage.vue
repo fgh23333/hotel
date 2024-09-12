@@ -28,7 +28,6 @@
 </template>
 
 <script>
-import { server, port } from '@/utils/config.js'
 import { ElMessage } from 'element-plus'
 
 export default {
@@ -44,26 +43,7 @@ export default {
     },
     methods: {
         handleDelete(index, row) {
-            axiosInstance({
-                method: 'POST',
-                url: `http://${server}:${port}/api/user/degrade`,
-                data: {
-                    user_id: row.user_id
-                }
-            }).then(res => {
-                if (res.data.msg == 'success') {
-                    this.getTableData()
-                    ElMessage({
-                        message: '删除成功',
-                        type: 'success'
-                    })
-                } else {
-                    ElMessage({
-                        message: '删除失败',
-                        type: 'error'
-                    })
-                }
-            })
+            
         }
     }
 }

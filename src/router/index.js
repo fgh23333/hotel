@@ -5,7 +5,6 @@ import orderManage from "@/views/orderManage.vue"
 import { createRouter, createWebHashHistory } from "vue-router";
 import { useAuthStore } from '../store/index.js';
 import staffManage from "@/views/staffManage.vue";
-import withdrawManage from "@/views/withdrawManage.vue";
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -18,23 +17,18 @@ const router = createRouter({
                 {
                     path: "userManage",
                     component: userManage,
-                    meta: { requiresAuth: true, roles: ['admin', 'editor'] }
+                    meta: { requiresAuth: true}
                 },
                 {
                     path: "orderManage",
                     component: orderManage,
-                    meta: { requiresAuth: true, roles: ['admin', 'editor'] }
+                    meta: { requiresAuth: true}
                 },
                 {
                     path: 'staffManage',
                     component: staffManage,
-                    meta: { requiresAuth: true, roles: ['admin'] }
+                    meta: { requiresAuth: true}
                 },
-                {
-                    path: 'withdrawManage',
-                    component: withdrawManage,
-                    meta: { requiresAuth: true, roles: ['admin'] }
-                }
             ]
         },
         {
@@ -51,13 +45,12 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     const authStore = useAuthStore();
-
+    const token = localStorage.getItem(token)
+    console.log(token);
+    
     if (to.meta.requiresAuth) {
-        if (!authStore.token) {
+        if (!token) {
             next('/login');
-        } else if (to.meta.roles && !to.meta.roles.includes(authStore.role)) {
-            // 如果用户角色不匹配
-            next({ name: 'homeView' });
         } else {
             next();
         }

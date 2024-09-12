@@ -7,7 +7,6 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import 'element-plus/dist/index.css'
 import ElementPlus from 'element-plus'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
-import { camelCaseToLine } from '@/utils/index'
 
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
