@@ -25,9 +25,9 @@
                     <el-table-column prop="customer" label="客户"></el-table-column>
                     <el-table-column prop="date" label="日期"></el-table-column>
                     <el-table-column prop="status" label="状态">
-                        <template #default="scope">
+                        <!-- <template #default="scope">
                             <el-tag :type="statusType(scope.row.status)">{{ scope.row.status }}</el-tag>
-                        </template>
+                        </template> -->
                     </el-table-column>
                 </el-table>
             </div>
@@ -109,6 +109,8 @@ export default {
             }).then(async res => {
                 if (res.data.msg == 'success') {
                     this.tableData = res.data.data
+                    console.log(this.tableData);
+                    
                 } else {
                     ElMessage({
                         message: '信息获取失败',

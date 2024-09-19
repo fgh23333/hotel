@@ -21,24 +21,6 @@ order.get('/', async (ctx) => {
     }
 })
 
-order.get('/:id', jwtAuth(), async (ctx) => {
-    const id = ctx.state.user.id
-    let searchSql = `SELECT * FROM order_list WHERE user_id = '${id}'`
-    let orderDetail = await new Promise((resolve, reject) => {
-        return db.query(searchSql, (err, data) => {
-            if (err) {
-                console.error(err);
-            } else {
-                resolve(data)
-            }
-        })
-    })
-
-    await parseOrderDetails(orderDetail);
-
-    ctx.body = orderDetail
-})
-
 order.post('/', async (ctx) => {
     const { customer, date, status } = ctx.request.body;
 
@@ -51,10 +33,11 @@ order.post('/', async (ctx) => {
     }
 
     try {
+        const formattedDate = new Date(date).toISOString().slice(0, 19).replace('T', ' ');
         // 插入订单数据到数据库
         const result = await db.search(
             'INSERT INTO orders (customer, date, status) VALUES (?, ?, ?)',
-            [customer, date, status]
+            [customer, formattedDate, status]
         );
 
         if (result.affectedRows > 0) {

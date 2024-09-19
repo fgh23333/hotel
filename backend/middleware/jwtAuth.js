@@ -15,7 +15,7 @@ const jwtAuth = () => {
     try {
       // 解码并验证 token
       const decoded = jwt.verify(token, PERMISSION_SECRET);
-      console.log(decoded)
+
       // 验证 token 中是否包含用户名
       if (!decoded.username) {
         ctx.status = 401;
