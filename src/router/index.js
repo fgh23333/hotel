@@ -3,6 +3,7 @@ import loginView from "@/views/loginView.vue";
 import userManage from "@/views/userManage.vue"
 import orderManage from "@/views/orderManage.vue"
 import productManage from "@/views/productManage.vue"
+import truckManage from "@/views/truckManage.vue"
 import { createRouter, createWebHashHistory } from "vue-router";
 import { useAuthStore } from '../store/index.js';
 
@@ -29,6 +30,11 @@ const router = createRouter({
                     path: 'productManage',
                     component: productManage,
                     meta: { requiresAuth: true }
+                },
+                {
+                    path: 'truckManage',
+                    component: truckManage,
+                    meta: { requiresAuth: true }
                 }
             ]
         },
@@ -44,18 +50,18 @@ const router = createRouter({
     ]
 });
 
-// router.beforeEach((to, from, next) => {
-//     const authStore = useAuthStore();
+router.beforeEach((to, from, next) => {
+    const authStore = useAuthStore();
 
-//     if (to.meta.requiresAuth) {
-//         if (!authStore.token) {
-//             next('/login');
-//         } else {
-//             next();
-//         }
-//     } else {
-//         next();
-//     }
-// });
+    if (to.meta.requiresAuth) {
+        if (!authStore.token) {
+            next('/login');
+        } else {
+            next();
+        }
+    } else {
+        next();
+    }
+});
 
 export default router;

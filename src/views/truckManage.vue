@@ -1,17 +1,25 @@
 <template>
-    <div id="userManage">
+    <div id="truckManage">
         <div class="manageCover">
-            <h2 class="manageTitle">用户管理</h2>
+            <h2 class="manageTitle">车辆管理</h2>
             <div class="manageForm">
-                <addCustomer @updateData="refreshTable"></addCustomer>
+                <el-form :model="form" label-width="auto">
+                    <el-form-item label="司机ID">
+                        <el-input v-model="form.driverId"></el-input>
+                    </el-form-item>
+                    <el-form-item label="车辆名称">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="handleAdd">添加</el-button>
+                    </el-form-item>
+                </el-form>
             </div>
             <div class="manageTable">
                 <el-table :data="tableData">
                     <el-table-column prop="id" label="ID" width="50"></el-table-column>
-                    <el-table-column prop="name" label="姓名"></el-table-column>
-                    <el-table-column prop="phone" label="电话"></el-table-column>
-                    <el-table-column prop="email" label="邮箱"></el-table-column>
-                    <el-table-column prop="address" label="地址"></el-table-column>
+                    <el-table-column prop="DriverID" label="司机ID"></el-table-column>
+                    <el-table-column prop="TruckName" label="车辆名称"></el-table-column>
                     <el-table-column label="操作">
                         <template #default="scope">
                             <el-button @click="handleDelete(scope.$index, scope.row)" type="danger"
@@ -29,22 +37,22 @@ import { server, port } from '@/utils/config.js'
 import { ElMessage } from 'element-plus'
 import { useAuthStore } from '@/store/index';
 import axiosInstance from '@/utils/axiosInstance';
-import addCustomer from '@/components/AddCustomer.vue'
 
 export default {
     data() {
         return {
             tableData: [],
+            form: {
+                driverId: '',
+                name: ''
+            }
         }
-    },
-    components: {
-        addCustomer
     },
     methods: {
         getTableData() {
             axiosInstance({
                 method: 'GET',
-                url: `http://${server}:${port}/api/user`
+                url: `http://${server}:${port}/api/truck`
             }).then(async res => {
                 if (res.data.msg == 'success') {
                     this.tableData = res.data.data
@@ -62,7 +70,7 @@ export default {
             try {
                 const response = await axiosInstance({
                     method: 'DELETE',
-                    url: `http://${server}:${port}/api/user/${row.id}`,
+                    url: `http://${server}:${port}/api/truck/${row.id}`,
                 });
 
                 if (response.data.msg === 'success') {
@@ -86,11 +94,50 @@ export default {
                 }
             }
         },
-        refreshTable(data) {
-            if (data) {
-                this.getTableData()
-            } else {
-                return
+        async handleAdd() {
+            if (!this.form.driverId || !this.form.name) {
+                ElMessage({
+                    message: '请填写司机和车辆',
+                    type: 'warning'
+                });
+                return;
+            }
+
+            const postData = {
+                driverId: this.form.driverId,
+                name: this.form.name
+            };
+
+            try {
+                const response = await axiosInstance({
+                    method: 'POST',
+                    url: `http://${server}:${port}/api/truck`,
+                    data: postData
+                });
+
+                if (response.data.msg === 'success') {
+                    this.getTableData();
+
+                    ElMessage({
+                        message: '成功添加',
+                        type: 'success'
+                    });
+
+                    this.form.driverId = '';
+                    this.form.name = '';
+
+                } else {
+                    ElMessage({
+                        message: '添加失败',
+                        type: 'error'
+                    });
+                }
+            } catch (error) {
+                console.error('请求出错:', error);
+                ElMessage({
+                    message: '添加失败',
+                    type: 'error'
+                });
             }
         }
     },
@@ -101,7 +148,7 @@ export default {
 </script>
 
 <style lang="scss">
-#userManage {
+#truckManage {
     width: 100%;
     margin-top: 20px;
 

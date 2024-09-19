@@ -7,12 +7,19 @@
                     <el-form-item label="司机">
                         <el-input v-model="form.driver"></el-input>
                     </el-form-item>
+                    <el-form-item label="订单ID">
+                        <el-input v-model="form.orderId"></el-input>
+                    </el-form-item>
+                    <el-form-item label="车辆ID">
+                        <el-input v-model="form.vehicle"></el-input>
+                    </el-form-item>
                     <el-form-item label="状态">
                         <el-select v-model="form.status" placeholder="选择状态">
                             <el-option label="运输中" value="pending"></el-option>
                             <el-option label="已完成" value="completed"></el-option>
                         </el-select>
                     </el-form-item>
+                    
                     <el-form-item>
                         <el-button type="primary" @click="handleAdd">添加</el-button>
                     </el-form-item>
@@ -21,12 +28,17 @@
             <div class="manageTable">
                 <el-table :data="tableData" style="width: 100%">
                     <el-table-column prop="id" label="配送ID" width="100"></el-table-column>
-                    <el-table-column prop="orderId" label="订单ID"></el-table-column>
+                    <el-table-column prop="order_id" label="订单ID"></el-table-column>
                     <el-table-column prop="vehicle" label="运输车辆"></el-table-column>
                     <el-table-column prop="driver" label="司机"></el-table-column>
                     <el-table-column label="进度">
                         <template #default="scope">
-                            <el-progress :percentage="getDeliveryProgress(scope.row.status)" :text-inside="true" />
+                            <el-progress :percentage="getDeliveryProgress(scope.row.status)" />
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="操作">
+                        <template #default="scope">
+                            <el-button type="primary" @click="handleEdit(scope.row)" v-if="scope.row.status !== 'completed'">确认到达</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -46,7 +58,9 @@ export default {
             tableData: [],
             form: {
                 status: '',
-                driver: ''
+                driver: '',
+                orderId: '',
+                vehicle: ''
             }
         }
     },
@@ -62,17 +76,21 @@ export default {
 
             const postData = {
                 driver: this.form.driver,
-                status: this.form.status
+                status: this.form.status,
+                vehicle: this.form.vehicle,
+                orderId: this.form.orderId
             };
 
             try {
                 const response = await axiosInstance({
                     method: 'POST',
-                    url: `http://${server}:${port}/api/product`, // 替换为你的接口路径
+                    url: `http://${server}:${port}/api/product`,
                     data: postData
                 });
 
                 if (response.data.msg === 'success') {
+                    this.getTableData();
+
                     ElMessage({
                         message: '成功添加配送进度',
                         type: 'success'
@@ -80,9 +98,11 @@ export default {
 
                     this.form.driver = '';
                     this.form.status = '';
+                    this.form.vehicle = '';
+                    this.form.orderId = '';
 
                     // 刷新表格数据
-                    this.getTableData();
+
                 } else {
                     ElMessage({
                         message: '添加配送进度失败',
@@ -99,7 +119,7 @@ export default {
         },
         // 根据状态计算进度条百分比
         getDeliveryProgress(status) {
-            return status === '已完成' ? 100 : 50;
+            return status === 'completed' ? 100 : 50;
         },
         handleDelete(index, row) {
             let removed = this.tableData[index]
@@ -116,6 +136,29 @@ export default {
                 } else {
                     ElMessage({
                         message: '删除失败',
+                        type: 'error'
+                    })
+                }
+            })
+        },
+        handleEdit(row) {
+            const data = {
+                id: row.id
+            }
+            axiosInstance({
+                method: 'POST',
+                url: `http://${server}:${port}/api/product/confirm`,
+                data: data
+            }).then(res => {
+                if (res.data.msg == 'success') {
+                    this.getTableData()
+                    ElMessage({
+                        message: '确认成功',
+                        type: 'success'
+                    })
+                } else {
+                    ElMessage({
+                        message: '确认失败',
                         type: 'error'
                     })
                 }
@@ -146,6 +189,7 @@ export default {
 <style lang="scss">
 #productManage {
     width: 100%;
+    margin-top: 20px;
 
     .manageCover {
         width: 80%;

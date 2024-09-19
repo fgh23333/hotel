@@ -2,29 +2,6 @@ import axiosInstance from '@/utils/axiosInstance';
 import { defineStore } from 'pinia';
 import { ElMessage } from 'element-plus';
 
-export const useCustomerStore = defineStore('customer', {
-    state: () => ({
-        customers: []
-    }),
-    actions: {
-        addCustomer(newCustomer) {
-            this.customers.push(newCustomer);
-        },
-        setCustomers(customers) {
-            this.customers = customers;
-        }
-    },
-    persist: {
-        enabled: true, // 启用持久化
-        strategies: [
-            {
-                key: 'customer-list', // 在 localStorage 中的 key
-                storage: localStorage, // 使用 localStorage 进行持久化存储
-            }
-        ]
-    }
-});
-
 export const useAuthStore = defineStore('auth', {
     state: () => ({
         token: localStorage.getItem('token') || null,

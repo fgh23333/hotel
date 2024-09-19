@@ -25,9 +25,9 @@
                     <el-table-column prop="customer" label="客户"></el-table-column>
                     <el-table-column prop="date" label="日期"></el-table-column>
                     <el-table-column prop="status" label="状态">
-                        <!-- <template #default="scope">
-                            <el-tag :type="statusType(scope.row.status)">{{ scope.row.status }}</el-tag>
-                        </template> -->
+                        <template #default="scope">
+                            <el-tag :type="statusType(scope.row.status)">{{ status[scope.row.status] }}</el-tag>
+                        </template>
                     </el-table-column>
                 </el-table>
             </div>
@@ -48,6 +48,10 @@ export default {
                 customer: '',
                 date: '',
                 status: ''
+            },
+            status: {
+                'pending': '待完成',
+                'completed': '已完成'
             }
         }
     },
@@ -109,8 +113,6 @@ export default {
             }).then(async res => {
                 if (res.data.msg == 'success') {
                     this.tableData = res.data.data
-                    console.log(this.tableData);
-                    
                 } else {
                     ElMessage({
                         message: '信息获取失败',
@@ -161,6 +163,14 @@ export default {
                     message: '未取消订单'
                 })
             })
+        },
+        statusType(status) {
+            switch (status) {
+                case 'pending':
+                    return 'info';
+                case 'completed':
+                    return 'success';
+            }
         }
     },
     created() {
@@ -172,6 +182,7 @@ export default {
 <style lang="scss">
 #orderManage {
     width: 100%;
+    margin-top: 20px;
 
     .manageCover {
         width: 80%;

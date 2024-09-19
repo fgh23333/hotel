@@ -7,7 +7,11 @@ order.prefix('/api/order')
 
 order.get('/', async (ctx) => {
     try {
-        const [rows] = await db.search('SELECT * FROM orders');
+        let rows = await db.search('SELECT * FROM orders');
+        for (let i = 0; i < rows.length; i++) {
+            rows[i].date = rows[i].date.toISOString().slice(0, 19).replace('T', ' ');
+        }
+        
         ctx.body = {
             msg: 'success',
             data: rows

@@ -23,6 +23,7 @@
 
 <script>
 import axiosInstance from '@/utils/axiosInstance';
+import { server, port } from '@/utils/config';
 
 export default {
     data() {

@@ -7,7 +7,7 @@ product.prefix('/api/product')
 
 product.get('/', jwtAuth(), async (ctx) => {
     try {
-        const [rows] = await db.search('SELECT * FROM delivery_progress');
+        const rows = await db.search('SELECT * FROM delivery_progress');
         ctx.body = {
             msg: 'success',
             data: rows
@@ -22,7 +22,7 @@ product.get('/', jwtAuth(), async (ctx) => {
 })
 
 product.post('/', jwtAuth(), async (ctx) => {
-    const { driver, status } = ctx.request.body;
+    const { driver, status, orderId, vehicle } = ctx.request.body;
 
     if (!driver || !status) {
         ctx.status = 400;
@@ -35,8 +35,8 @@ product.post('/', jwtAuth(), async (ctx) => {
     try {
         // 插入配送进度数据到数据库
         const result = await db.search(
-            'INSERT INTO delivery_progress (driver, status) VALUES (?, ?)',
-            [driver, status]
+            'INSERT INTO delivery_progress (driver, status, order_id, vehicle) VALUES (?, ?, ?, ?)',
+            [driver, status, orderId, vehicle]
         );
 
         if (result.affectedRows > 0) {
@@ -54,6 +54,30 @@ product.post('/', jwtAuth(), async (ctx) => {
         ctx.status = 500;
         ctx.body = {
             msg: '添加配送进度失败'
+        };
+    }
+})
+
+product.post('/confirm', jwtAuth(), async (ctx) => {
+    const { id } = ctx.request.body
+
+    try {
+        const result = await db.search('UPDATE delivery_progress SET status = ? WHERE id = ?', ['completed', id])
+        if (result.affectedRows > 0) {
+            ctx.body = {
+                msg: 'success'
+            };
+        } else {
+            ctx.status = 404;
+            ctx.body = {
+                msg: '记录未找到'
+            };
+        }
+    } catch (error) {
+        console.error('确认失败:', error);
+        ctx.status = 500;
+        ctx.body = {
+            msg: '确认失败'
         };
     }
 })
