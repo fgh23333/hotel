@@ -1,19 +1,37 @@
-import { createRouter, createWebHashHistory } from 'vue-router';
-import loginView from '@/views/loginView.vue';
-import Dashboard from '@/views/Dashboard.vue';
-import RoomManagement from '@/components/RoomManagement.vue';
-import BookingManagement from '@/components/BookingManagement.vue';
-import CustomerCheckIn from '@/components/CustomerCheckIn.vue';
-import FinancialManagement from '@/components/FinancialManagement.vue';
+import homeView from "@/views/homeView.vue";
+import loginView from "@/views/loginView.vue";
+import userManage from "@/views/userManage.vue"
+import orderManage from "@/views/orderManage.vue"
+import productManage from "@/views/productManage.vue"
+import { createRouter, createWebHashHistory } from "vue-router";
+import { useAuthStore } from '../store/index.js';
 
 const router = createRouter({
     history: createWebHashHistory(),
     routes: [
-        { path: '/', component: Dashboard },
-        { path: '/rooms', component: RoomManagement },
-        { path: '/bookings', component: BookingManagement },
-        { path: '/check-ins', component: CustomerCheckIn },
-        { path: '/financials', component: FinancialManagement },
+        {
+            path: "/",
+            name: homeView,
+            component: homeView,
+            meta: { requiresAuth: true },
+            children: [
+                {
+                    path: "userManage",
+                    component: userManage,
+                    meta: { requiresAuth: true }
+                },
+                {
+                    path: "orderManage",
+                    component: orderManage,
+                    meta: { requiresAuth: true }
+                },
+                {
+                    path: 'productManage',
+                    component: productManage,
+                    meta: { requiresAuth: true }
+                }
+            ]
+        },
         {
             path: "/login",
             component: loginView,
@@ -26,18 +44,18 @@ const router = createRouter({
     ]
 });
 
-router.beforeEach((to, from, next) => {
-    const token = localStorage.getItem('login')
+// router.beforeEach((to, from, next) => {
+//     const authStore = useAuthStore();
 
-    if (to.meta.requiresAuth) {
-        if (!token) {
-            next('/login');
-        } else {
-            next();
-        }
-    } else {
-        next();
-    }
-});
+//     if (to.meta.requiresAuth) {
+//         if (!authStore.token) {
+//             next('/login');
+//         } else {
+//             next();
+//         }
+//     } else {
+//         next();
+//     }
+// });
 
 export default router;
