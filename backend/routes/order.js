@@ -5,7 +5,7 @@ const jwtAuth = require('../middleware/jwtAuth')
 
 order.prefix('/api/order')
 
-order.get('/', async (ctx) => {
+order.get('/', jwtAuth(), async (ctx) => {
     try {
         let rows = await db.search('SELECT * FROM orders');
         for (let i = 0; i < rows.length; i++) {
@@ -25,7 +25,7 @@ order.get('/', async (ctx) => {
     }
 })
 
-order.post('/', async (ctx) => {
+order.post('/', jwtAuth(), async (ctx) => {
     const { customer, date, status } = ctx.request.body;
 
     if (!customer || !date || !status) {

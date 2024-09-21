@@ -6,6 +6,7 @@ import productManage from "@/views/productManage.vue"
 import truckManage from "@/views/truckManage.vue"
 import { createRouter, createWebHashHistory } from "vue-router";
 import { useAuthStore } from '../store/index.js';
+import employeeManage from "@/views/employeeManage.vue";
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -34,6 +35,11 @@ const router = createRouter({
                 {
                     path: 'truckManage',
                     component: truckManage,
+                    meta: { requiresAuth: true }
+                },
+                {
+                    path: 'employeeManage',
+                    component: employeeManage,
                     meta: { requiresAuth: true }
                 }
             ]

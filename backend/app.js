@@ -14,6 +14,7 @@ const product = require('./routes/product')
 const user = require('./routes/user')
 const order = require('./routes/order')
 const truck = require('./routes/truck')
+const employee = require('./routes/employee')
 
 app.use(cors())
 // error handler
@@ -45,6 +46,7 @@ app.use(auth.routes(), auth.allowedMethods())
 app.use(order.routes(), order.allowedMethods())
 app.use(product.routes(), product.allowedMethods())
 app.use(truck.routes(), truck.allowedMethods())
+app.use(employee.routes(), employee.allowedMethods())
 
 // error-handling
 app.on('error', (err, ctx) => {

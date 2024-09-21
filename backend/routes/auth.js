@@ -28,7 +28,7 @@ auth.post('/', async (ctx) => {
     ctx.body = { msg: 'Invalid username or password' };
   }
 })
-// 假设在 Koa2 后端中有一个 token 验证接口
+
 auth.post('/verify-token', jwtAuth(), async (ctx) => {
   const username = ctx.state.username;
 

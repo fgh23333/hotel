@@ -22,7 +22,7 @@ truck.get('/', jwtAuth(), async (ctx) => {
   }
 });
 
-truck.post('/', async (ctx) => {
+truck.post('/', jwtAuth(), async (ctx) => {
   const { name, driverId } = ctx.request.body;
 
   if (!name || !driverId) {

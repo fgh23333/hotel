@@ -18,6 +18,7 @@
                 <el-menu-item index="productManage">进度管理</el-menu-item>
                 <el-menu-item index="orderManage">订单管理</el-menu-item>
                 <el-menu-item index="truckManage">车辆管理</el-menu-item>
+                <el-menu-item index="employeeManage">员工管理</el-menu-item>
             </el-sub-menu>
         </el-menu>
     </div>
