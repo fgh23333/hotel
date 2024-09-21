@@ -1,7 +1,7 @@
 <template>
     <div id="goodsManage">
         <div class="manageCover">
-            <h2 class="manageTitle">订单管理</h2>
+            <h2 class="manageTitle">货物管理</h2>
             <div class="manageForm">
                 <el-form :model="form" ref="formRef" label-width="120px">
                     <el-form-item label="货物名称">

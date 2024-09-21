@@ -9,7 +9,7 @@ order.get('/', jwtAuth(), async (ctx) => {
     try {
         let rows = await db.search('SELECT * FROM orders');
         for (let i = 0; i < rows.length; i++) {
-            rows[i].date = rows[i].date.toISOString().slice(0, 19).replace('T', ' ');
+            rows[i].date = rows[i].date.toISOString().slice(0, 10)
         }
         
         ctx.body = {
@@ -37,7 +37,7 @@ order.post('/', jwtAuth(), async (ctx) => {
     }
 
     try {
-        const formattedDate = new Date(date).toISOString().slice(0, 19).replace('T', ' ');
+        const formattedDate = new Date(date).toISOString().slice(0, 10)
         // 插入订单数据到数据库
         const result = await db.search(
             'INSERT INTO orders (customer, date, status) VALUES (?, ?, ?)',

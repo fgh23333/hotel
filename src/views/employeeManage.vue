@@ -1,7 +1,7 @@
 <template>
     <div id="employeeManage">
         <div class="manageCover">
-            <h2 class="manageTitle">订单管理</h2>
+            <h2 class="manageTitle">员工管理</h2>
             <div class="manageForm">
                 <el-form :model="employeeForm" :rules="rules" ref="employeeFormRef" label-width="100px">
                     <el-form-item label="姓名" prop="EmployeeName">
