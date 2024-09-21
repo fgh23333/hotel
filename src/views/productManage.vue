@@ -18,8 +18,7 @@
                             <el-option label="运输中" value="pending"></el-option>
                             <el-option label="已完成" value="completed"></el-option>
                         </el-select>
-                    </el-form-item>
-                    
+                    </el-form-item>  
                     <el-form-item>
                         <el-button type="primary" @click="handleAdd">添加</el-button>
                     </el-form-item>

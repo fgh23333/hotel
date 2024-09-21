@@ -42,10 +42,12 @@
                     <el-table-column prop="Position" label="职位"></el-table-column>
                     <el-table-column prop="Address" label="地址"></el-table-column>
                     <el-table-column prop="PhoneNumber" label="电话"></el-table-column>
+                    <el-table-column prop="BirthDate" label="出生日期"></el-table-column>
                     <el-table-column label="操作" width="200">
                         <template #default="scope">
                             <el-button size="small" @click="editEmployee(scope.row)">编辑</el-button>
-                            <el-button size="small" type="danger" @click="deleteEmployee(scope.row.EmployeeID)">删除</el-button>
+                            <el-button size="small" type="danger"
+                                @click="deleteEmployee(scope.row.EmployeeID)">删除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -90,7 +92,10 @@ export default {
         // 获取员工信息
         async fetchEmployees() {
             try {
-                const response = await axiosInstance.get("/api/employee");
+                let response = await axiosInstance.get("/api/employee");
+                for (let i = 0; i < response.data.data.length; i++) {
+                    response.data.data[i].BirthDate = new Date(response.data.data[i].BirthDate).toISOString().slice(0, 10);
+                }
                 this.employees = response.data.data;
             } catch (error) {
                 console.error("获取员工列表失败", error);

@@ -61,7 +61,7 @@ employee.delete('/:id', jwtAuth(), async (ctx) => {
     const { id } = ctx.params;
 
     try {
-        const result = await db.search('UPDATE employee SET status = ? WHERE id = ?', [0, id]);
+        const result = await db.search('UPDATE employee SET status = ? WHERE EmployeeID = ?', [0, id]);
 
         if (result.affectedRows > 0) {
             ctx.body = {
