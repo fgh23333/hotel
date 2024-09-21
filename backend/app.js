@@ -9,7 +9,6 @@ require('dotenv').config();
 
 const cors = require('@koa/cors')
 
-const index = require('./routes/index')
 const auth = require('./routes/auth')
 const product = require('./routes/product')
 const user = require('./routes/user')
@@ -41,7 +40,6 @@ app.use(async (ctx, next) => {
 })
 
 // routes
-app.use(index.routes(), index.allowedMethods())
 app.use(user.routes(), user.allowedMethods())
 app.use(auth.routes(), auth.allowedMethods())
 app.use(order.routes(), order.allowedMethods())

@@ -1,8 +1,6 @@
 const Router = require('koa-router');
 const user = new Router();
 const db = require('../middleware/sql');
-const jwt = require('jsonwebtoken');
-const axios = require('axios');
 const jwtAuth = require('../middleware/jwtAuth');
 
 user.prefix('/api/user');
