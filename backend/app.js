@@ -16,6 +16,7 @@ const order = require('./routes/order')
 const truck = require('./routes/truck')
 const employee = require('./routes/employee')
 const goodsList = require('./routes/goodsList')
+const warehouse = require('./routes/warehouse')
 
 app.use(cors())
 // error handler
@@ -49,6 +50,7 @@ app.use(product.routes(), product.allowedMethods())
 app.use(truck.routes(), truck.allowedMethods())
 app.use(employee.routes(), employee.allowedMethods())
 app.use(goodsList.routes(), goodsList.allowedMethods())
+app.use(warehouse.routes(), warehouse.allowedMethods())
 
 // error-handling
 app.on('error', (err, ctx) => {
