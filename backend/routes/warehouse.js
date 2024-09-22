@@ -39,7 +39,9 @@ warehouse.post('/', async (ctx) => {
     const { GoodsID, EntryDate, ExitDate } = ctx.request.body;
     const sql = 'INSERT INTO warehouse (GoodsID, EntryDate, ExitDate) VALUES (?, ?, ?)';
     try {
-        await search(sql, [GoodsID, EntryDate, ExitDate]);
+        const formattedEntryDate = new Date(EntryDate).toISOString().slice(0, 10);
+        const formattedExitDate = new Date(ExitDate).toISOString().slice(0, 10);
+        await search(sql, [GoodsID, formattedEntryDate, formattedExitDate]);
         ctx.status = 201;
         ctx.body = { message: '仓库记录创建成功' };
     } catch (err) {
@@ -54,7 +56,9 @@ warehouse.put('/:id', async (ctx) => {
     const { id } = ctx.params;
     const sql = 'UPDATE warehouse SET GoodsID = ?, EntryDate = ?, ExitDate = ? WHERE WarehouseID = ? AND is_deleted = 0';
     try {
-        const result = await search(sql, [GoodsID, EntryDate, ExitDate, id]);
+        const formattedEntryDate = new Date(EntryDate).toISOString().slice(0, 10);
+        const formattedExitDate = new Date(ExitDate).toISOString().slice(0, 10);
+        const result = await search(sql, [GoodsID, formattedEntryDate, formattedExitDate, id]);
         if (result.affectedRows === 0) {
             ctx.status = 404;
             ctx.body = { message: '仓库记录未找到或已被删除' };

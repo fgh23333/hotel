@@ -10,13 +10,14 @@ require('dotenv').config();
 const cors = require('@koa/cors')
 
 const auth = require('./routes/auth')
-const product = require('./routes/product')
+const delivery_progress = require('./routes/delivery_progress')
 const user = require('./routes/user')
 const order = require('./routes/order')
 const truck = require('./routes/truck')
 const employee = require('./routes/employee')
 const goodsList = require('./routes/goodsList')
 const warehouse = require('./routes/warehouse')
+const recipient = require('./routes/recipient')
 
 app.use(cors())
 // error handler
@@ -46,11 +47,12 @@ app.use(async (ctx, next) => {
 app.use(user.routes(), user.allowedMethods())
 app.use(auth.routes(), auth.allowedMethods())
 app.use(order.routes(), order.allowedMethods())
-app.use(product.routes(), product.allowedMethods())
+app.use(delivery_progress.routes(), delivery_progress.allowedMethods())
 app.use(truck.routes(), truck.allowedMethods())
 app.use(employee.routes(), employee.allowedMethods())
 app.use(goodsList.routes(), goodsList.allowedMethods())
 app.use(warehouse.routes(), warehouse.allowedMethods())
+app.use(recipient.routes(), recipient.allowedMethods())
 
 // error-handling
 app.on('error', (err, ctx) => {
