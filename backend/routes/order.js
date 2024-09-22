@@ -17,7 +17,6 @@ order.get('/', jwtAuth(), async (ctx) => {
             data: rows
         };
     } catch (error) {
-        console.error('获取订单失败:', error);
         ctx.status = 500;
         ctx.body = {
             msg: '获取订单失败'
@@ -55,10 +54,52 @@ order.post('/', jwtAuth(), async (ctx) => {
             };
         }
     } catch (error) {
-        console.error('添加订单失败:', error);
         ctx.status = 500;
         ctx.body = {
             msg: '添加订单失败'
+        };
+    }
+});
+
+order.post('/complete', jwtAuth(), async (ctx) => {
+    const { id } = ctx.request.body;
+
+    if (!id) {
+        ctx.status = 400;
+        ctx.body = {
+            msg: '订单 ID 为必填项'
+        };
+        return;
+    }
+
+    try {
+        // 查询订单
+        const [order] = await db.search('SELECT * FROM orders WHERE id = ?', [id]);
+
+        if (order.length === 0) {
+            ctx.status = 404;
+            ctx.body = {
+                msg: '订单未找到'
+            };
+            return;
+        }
+
+        const result = await db.search('UPDATE orders SET status = ? WHERE id = ?', ['completed', id]);
+
+        if (result.affectedRows > 0) {
+            ctx.body = {
+                msg: '完成成功'
+            };
+        } else {
+            ctx.status = 500;
+            ctx.body = {
+                msg: '完成失败'
+            };
+        }
+    } catch (error) {
+        ctx.status = 500;
+        ctx.body = {
+            msg: '完成失败'
         };
     }
 });
@@ -100,7 +141,6 @@ order.post('/cancel', jwtAuth(), async (ctx) => {
             };
         }
     } catch (error) {
-        console.error('取消订单失败:', error);
         ctx.status = 500;
         ctx.body = {
             msg: '取消订单失败'

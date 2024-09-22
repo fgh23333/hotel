@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import axiosInstance from '@/utils/axiosInstance'; // 导入封装好的 Axios 实例
+import axiosInstance from '@/utils/axiosInstance';
 import { ElMessage } from 'element-plus';
 
 export default {
@@ -52,8 +52,8 @@ export default {
                 CustomerID: '',
                 EntryDate: '',
             },
-            editingId: null, // 用于记录正在编辑的货物ID
-            isEdit: false, // 是否为编辑模式
+            editingId: null,
+            isEdit: false,
         };
     },
     methods: {

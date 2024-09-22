@@ -16,6 +16,17 @@ goodsList.get('/', jwtAuth(), async (ctx) => {
     }
 });
 
+goodsList.get('/all', jwtAuth(), async (ctx) => {
+    const sql = 'SELECT * FROM goods';
+    try {
+        const goods = await search(sql);
+        ctx.body = goods;
+    } catch (err) {
+        ctx.status = 500;
+        ctx.body = { message: '获取货物失败', error: err.message };
+    }
+});
+
 goodsList.get('/:id', jwtAuth(), async (ctx) => {
     const sql = 'SELECT * FROM goods WHERE GoodsID = ? AND is_deleted = 0';
     try {

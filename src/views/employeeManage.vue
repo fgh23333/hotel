@@ -34,7 +34,7 @@
             </div>
             <div class="manageTable">
                 <el-table :data="employees" style="width: 100%; margin-top: 20px">
-                    <el-table-column prop="EmployeeID" label="ID" width="80"></el-table-column>
+                    <el-table-column prop="EmployeeID" label="ID" min-width="80"></el-table-column>
                     <el-table-column prop="EmployeeName" label="姓名"></el-table-column>
                     <el-table-column label="性别">
                         <template #default="scope">{{ gender[scope.row.Gender] }}</template>

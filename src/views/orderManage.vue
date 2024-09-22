@@ -4,7 +4,7 @@
             <h2 class="manageTitle">订单管理</h2>
             <el-form :model="form" label-width="100px" class="order-form">
                 <el-form-item label="客户">
-                    <el-input v-model="form.customer" placeholder="请输入客户姓名"></el-input>
+                    <el-input v-model="form.customer" placeholder="请输入客户姓名" clearable></el-input>
                 </el-form-item>
                 <el-form-item label="日期">
                     <el-date-picker v-model="form.date" type="date" placeholder="选择日期"></el-date-picker>
@@ -20,13 +20,19 @@
                 </el-form-item>
             </el-form>
             <div class="manageTable">
-                <el-table :data="tableData">
+                <el-table :data="tableData" border>
                     <el-table-column prop="id" label="订单ID" width="100"></el-table-column>
                     <el-table-column prop="customer" label="客户"></el-table-column>
                     <el-table-column prop="date" label="日期"></el-table-column>
                     <el-table-column prop="status" label="状态">
                         <template #default="scope">
                             <el-tag :type="statusType(scope.row.status)">{{ status[scope.row.status] }}</el-tag>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="操作">
+                        <template #default="scope">
+                            <el-button size="small" type="primary" @click="handleComplete(scope.row)" v-if="scope.row.status === 'pending'">完成订单</el-button>
+                            <el-button size="small" type="danger" @click="handleDelete(scope.row)" v-if="scope.row.status === 'pending'">取消订单</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -36,7 +42,6 @@
 </template>
 
 <script>
-import { server, port } from '@/utils/config.js'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import axiosInstance from '@/utils/axiosInstance';
 
@@ -50,131 +55,104 @@ export default {
                 status: ''
             },
             status: {
-                'pending': '待完成',
-                'completed': '已完成'
+                'pending': '待处理',
+                'completed': '已完成',
+                'cancelled': '已取消'
             }
         }
     },
     methods: {
         async handleAdd() {
             if (!this.form.customer || !this.form.date || !this.form.status) {
-                ElMessage({
-                    message: '客户、日期和状态为必填项',
-                    type: 'warning'
-                });
+                ElMessage.warning('客户、日期和状态为必填项');
                 return;
             }
 
-            const postData = {
-                customer: this.form.customer,
-                date: this.form.date,
-                status: this.form.status
-            };
-
             try {
-                const response = await axiosInstance({
-                    method: 'POST',
-                    url: `http://${server}:${port}/api/order`,
-                    data: postData
-                });
+                const response = await axiosInstance.post(`/api/order`, this.form);
 
                 if (response.data.msg === 'success') {
-                    ElMessage({
-                        message: '订单添加成功',
-                        type: 'success'
-                    });
-
-                    // 清空表单
-                    this.form = {
-                        customer: '',
-                        date: '',
-                        status: ''
-                    };
-
+                    ElMessage.success('订单添加成功');
+                    this.resetForm();
                     this.getTableData();
                 } else {
-                    ElMessage({
-                        message: '订单添加失败',
-                        type: 'error'
-                    });
+                    ElMessage.error('订单添加失败');
                 }
             } catch (error) {
                 console.error('请求出错:', error);
-                ElMessage({
-                    message: '订单添加失败',
-                    type: 'error'
-                });
+                ElMessage.error('订单添加失败');
             }
         },
-        getTableData() {
-            axiosInstance({
-                method: 'GET',
-                url: `http://${server}:${port}/api/order`
-            }).then(async res => {
-                if (res.data.msg == 'success') {
-                    this.tableData = res.data.data
-                } else {
-                    ElMessage({
-                        message: '信息获取失败',
-                        type: 'error'
-                    })
-                }
-            })
+        resetForm() {
+            this.form = {
+                customer: '',
+                date: '',
+                status: ''
+            };
         },
-        handleDelete(index, row) {
-            ElMessageBox.confirm(
-                '确认取消订单吗?',
-                'Warning',
-                {
-                    confirmButtonText: '确认取消',
-                    cancelButtonText: '不取消',
-                    type: 'warning',
+        async getTableData() {
+            try {
+                const res = await axiosInstance.get(`/api/order`);
+                if (res.data.msg === 'success') {
+                    this.tableData = res.data.data;
+                } else {
+                    ElMessage.error('信息获取失败');
                 }
-            ).then(() => {
-                const postData = {
-                    id: row.id
+            } catch (error) {
+                console.error('获取数据出错:', error);
+                ElMessage.error('信息获取失败');
+            }
+        },
+        handleComplete(row) {
+            ElMessageBox.confirm('确认完成订单吗?', '提醒', {
+                confirmButtonText: '确认完成',
+                cancelButtonText: '不完成',
+                type: 'info',
+            }).then(async () => {
+                try {
+                    const response = await axiosInstance.post(`/api/order/complete`, { id: row.id });
+                    ElMessage.success(response.data.msg);
+                    this.getTableData();
+                } catch (error) {
+                    ElMessage.error('完成订单失败');
                 }
-                axiosInstance({
-                    method: 'POST',
-                    url: `http://${server}:${port}/api/order/cancel`,
-                    data: postData
-                }).then(res => {
-                    ElMessage({
-                        message: res.data.msg,
-                        type: 'success'
-                    })
-                    if (res.status == 200) {
-                        this.getTableData()
-                        ElMessage({
-                            message: res.data.msg,
-                            type: 'success'
-                        })
-                    } else {
-                        ElMessage({
-                            message: res.data.msg,
-                            type: 'error'
-                        })
-                    }
-
-                })
             }).catch(() => {
-                ElMessage({
-                    type: 'info',
-                    message: '未取消订单'
-                })
-            })
+                ElMessage.info('未完成订单');
+            });
+        },
+        handleDelete(row) {
+            ElMessageBox.confirm('确认取消订单吗?', '警告', {
+                confirmButtonText: '确认取消',
+                cancelButtonText: '不取消',
+                type: 'warning',
+            }).then(async () => {
+                try {
+                    const response = await axiosInstance.post(`/api/order/cancel`, { id: row.id });
+                    ElMessage.success(response.data.msg);
+                    this.getTableData();
+                } catch (error) {
+                    ElMessage.error('取消订单失败');
+                }
+            }).catch(() => {
+                ElMessage.info('未取消订单');
+            });
         },
         statusType(status) {
             switch (status) {
                 case 'pending':
-                    return 'info';
+                    return 'info'
+                case 'cancelled':
+                    return 'danger'
                 case 'completed':
-                    return 'success';
+                    return 'success'
+                default:
+                    break;
             }
+
         }
     },
     created() {
-        this.getTableData()
+        this.getTableData();
     }
 }
 </script>
@@ -191,6 +169,7 @@ export default {
 
         .manageTitle {
             text-align: center;
+            margin-bottom: 20px;
         }
     }
 }

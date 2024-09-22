@@ -25,7 +25,11 @@
             <div class="manageTable">
                 <el-table :data="warehouses" style="width: 100%">
                     <el-table-column prop="WarehouseID" label="仓库ID" width="100" />
-                    <el-table-column prop="GoodsName" label="货物名称" />
+                    <el-table-column label="货物名称">
+                        <template #default="scope">
+                            {{ goodsListShow[scope.row.GoodsID - 1].GoodsName }}
+                        </template>
+                    </el-table-column>
                     <el-table-column prop="EntryDate" label="入库日期" />
                     <el-table-column prop="ExitDate" label="出库日期" />
                     <el-table-column label="操作" width="180">
@@ -50,6 +54,7 @@ export default {
         return {
             warehouses: [], // 仓库记录列表
             goodsList: [], // 货物列表，用于选择货物
+            goodsListShow: [],
             form: {
                 WarehouseID: null,
                 GoodsID: '',
@@ -83,11 +88,19 @@ export default {
                 ElMessage.error('获取货物列表失败');
             }
         },
+        async fetchShowGoods() {
+            try {
+                const response = await axiosInstance.get('/api/goodsList/all');
+                this.goodsListShow = response.data;
+            } catch (error) {
+                ElMessage.error('获取货物列表失败');
+            }
+        },
         // 标记删除仓库记录
         async deleteWarehouse(id) {
             try {
                 await axiosInstance.delete(`/api/warehouse/${id}`);
-                ElMessage.success('仓库记录已标记删除');
+                ElMessage.success('仓库记录已删除');
                 this.fetchWarehouses(); // 刷新列表
             } catch (error) {
                 ElMessage.error('删除仓库记录失败');
@@ -144,6 +157,7 @@ export default {
     mounted() {
         this.fetchWarehouses();
         this.fetchGoods();
+        this.fetchShowGoods();
     },
 };
 </script>

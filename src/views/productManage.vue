@@ -28,17 +28,17 @@
             </div>
             <div class="manageTable">
                 <el-table :data="tableData" style="width: 100%" v-loading="loading.table" element-loading-text="加载中...">
-                    <el-table-column prop="id" label="配送ID" width="100"></el-table-column>
-                    <el-table-column prop="order_id" label="订单ID" width="120"></el-table-column>
-                    <el-table-column prop="vehicle" label="运输车辆" width="120"></el-table-column>
-                    <el-table-column prop="driver" label="司机" width="120"></el-table-column>
-                    <el-table-column label="进度" width="200">
+                    <el-table-column prop="id" label="配送ID"></el-table-column>
+                    <el-table-column prop="order_id" label="订单ID"></el-table-column>
+                    <el-table-column prop="vehicle" label="运输车辆"></el-table-column>
+                    <el-table-column prop="driver" label="司机"></el-table-column>
+                    <el-table-column label="进度">
                         <template #default="scope">
                             <el-progress :percentage="getDeliveryProgress(scope.row.status)"
                                 :status="scope.row.status === 'completed' ? 'success' : 'active'"></el-progress>
                         </template>
                     </el-table-column>
-                    <el-table-column label="操作" width="180">
+                    <el-table-column label="操作">
                         <template #default="scope">
                             <el-button type="success" size="small" @click="handleEdit(scope.row)"
                                 v-if="scope.row.status !== 'completed'">确认到达</el-button>
