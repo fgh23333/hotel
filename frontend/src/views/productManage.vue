@@ -115,7 +115,7 @@ export default {
                     };
                     try {
                         const response = await axiosInstance.post(`/api/delivery_progress`, postData);
-                        if (response.data.message === '配送进度记录创建成功') {
+                        if (response.data.msg === 'success') {
                             this.getTableData();
                             ElMessage.success('成功添加配送进度');
                             this.handleReset();
