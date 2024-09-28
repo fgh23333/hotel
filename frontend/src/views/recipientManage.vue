@@ -1,7 +1,6 @@
 <template>
     <div id="recipientManage">
         <div class="manageCover">
-            <h2 class="manageTitle">收件人管理</h2>
             <div class="manageForm">
                 <el-form :model="form" ref="formRef" label-width="120px">
                     <el-form-item label="收件人姓名" :rules="{ required: true, message: '请输入收件人姓名', trigger: 'blur' }">

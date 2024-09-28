@@ -1,7 +1,6 @@
 <template>
     <div id="productManage">
         <div class="manageCover">
-            <h2 class="manageTitle">进度管理</h2>
             <div class="manageForm">
                 <el-form :model="form" :rules="rules" ref="formRef" label-width="120px" label-position="left"
                     @submit.native.prevent>

@@ -68,7 +68,7 @@ const router = createRouter({
             name: 'Login'
         },
         {
-            path: '/:catchAll(.*)', // 捕获所有未匹配的路由
+            path: '/:catchAll(.*)',
             redirect: '/login'
         }
     ]

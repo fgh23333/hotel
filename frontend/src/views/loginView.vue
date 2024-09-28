@@ -1,7 +1,7 @@
 <template>
     <div id="loginView">
         <div class="formWrapper">
-            <div class="formTitle"><b>登 录</b></div>
+            <div class="formTitle"><b>欢迎</b></div>
             <el-form :model="user" :rules="rules" ref="userForm">
                 <el-form-item prop="username">
                     <el-input class="usernameBox inputBox" v-model="user.username">
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { useAuthStore } from '@/store/index'; // 引入 Pinia store
+import { useAuthStore } from '@/store/index';
 import { ElMessage } from 'element-plus';
 import axios from 'axios';
 import { server, port } from "@/utils/config";
@@ -56,9 +56,9 @@ export default {
         async login() {
             this.$refs['userForm'].validate(async (valid) => {
                 if (valid) {
-                    const authStore = useAuthStore(); // 获取 authStore 实例
+                    const authStore = useAuthStore();
                     try {
-                        await authStore.login(this.user, this.$router); // 调用 store 中的 login 方法
+                        await authStore.login(this.user, this.$router);
                     } catch (error) {
                         ElMessage({
                             message: '登录失败，请检查账号或密码',
@@ -72,15 +72,12 @@ export default {
     created() {
         const token = localStorage.getItem('token');
         if (token) {
-            // 调用后端 API 验证 token 是否有效
             axios.post(`http://${server}:${port}/auth/verify-token`, { token })
                 .then(response => {
                     if (response.data.valid) {
-                        // token 有效，设置 headers 并登录
                         useAuthStore().token = token
                         useAuthStore().headers['blade-auth'] = token
                     } else {
-                        // token 无效或过期，清除 token 并提示登录
                         localStorage.removeItem('token');
                         console.log('Token expired, please login again');
                     }
@@ -97,7 +94,8 @@ export default {
 <style lang="scss">
 #loginView {
     height: 100vh;
-    background-image: linear-gradient(to bottom right, rgb(180, 245, 106), #ffffff);
+    background-image: url(https://images.agriharvest.tw/wp-content/uploads/2023/02/5-5-1024x683.jpg);
+    background-size:cover;
     overflow: hidden;
 
     .formWrapper {

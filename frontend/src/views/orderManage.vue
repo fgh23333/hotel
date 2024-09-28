@@ -1,7 +1,6 @@
 <template>
     <div id="orderManage">
         <div class="manageCover">
-            <h2 class="manageTitle">订单管理</h2>
             <el-form :model="form" label-width="100px" class="order-form">
                 <el-form-item label="客户">
                     <el-input v-model="form.customer" placeholder="请输入客户姓名" clearable></el-input>
