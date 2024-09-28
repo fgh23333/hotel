@@ -24,7 +24,6 @@
                         <template #default="scope">
                             <el-button @click="handleDelete(scope.$index, scope.row)" type="danger"
                                 size="small">删除</el-button>
-
                         </template>
                     </el-table-column>
                 </el-table>
