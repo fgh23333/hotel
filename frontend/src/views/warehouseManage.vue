@@ -1,7 +1,6 @@
 <template>
     <div id="warehouseManage">
         <div class="manageCover">
-            <h2 class="manageTitle">仓库管理</h2>
             <div class="manageForm">
                 <el-form :model="form" ref="formRef" label-width="120px">
                     <el-form-item label="货物名称" :rules="{ required: true, message: '请选择货物', trigger: 'change' }">

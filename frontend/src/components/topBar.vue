@@ -8,6 +8,7 @@
             </el-col>
             <el-col :span="8">
                 <div class="grid-content bg-purple-light">
+                    {{ titie }}
                     <slot name="middle"></slot>
                 </div>
             </el-col>
@@ -28,7 +29,31 @@ export default {
         return {
 
         }
-    }
+    },
+    computed: {
+        titie() {
+            switch (this.$route.path) {
+                case '/userManage':
+                    return '客户管理'
+                case '/productManage':
+                    return '进度管理'
+                case '/orderManage':
+                    return '订单管理'
+                case '/truckManage':
+                    return '车辆管理'
+                case '/employeeManage':
+                    return '员工管理'
+                case '/goodsManage':
+                    return '货物管理'
+                case '/warehouseManage':
+                    return '仓库管理'
+                case '/recipientManage':
+                    return '收件人管理'
+                default:
+                    return '主页'
+            }
+        }
+    },
 }
 </script>
 
@@ -55,11 +80,14 @@ export default {
     }
 
     .bg-purple {
-        background: #99a9bf;
+        background: #eee;
+        font-weight: bold;
+        font-size: 24px;
     }
 
     .bg-purple-light {
-        background: #FAFBFF;
+        background: #fff;
+        font-weight: bold;
     }
 }
 </style>

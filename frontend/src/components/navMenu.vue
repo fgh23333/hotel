@@ -1,13 +1,7 @@
 <template>
     <div id="navMenu">
         <el-menu default-active="2" class="el-menu-vertical-demo" :router="true">
-            <el-menu-item index="/">
-                <el-icon>
-                    <House />
-                </el-icon>
-                <span>主页</span>
-            </el-menu-item>
-            <el-sub-menu index="2">
+            <el-sub-menu index="/">
                 <template #title>
                     <el-icon>
                         <location />
